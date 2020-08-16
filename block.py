@@ -11,5 +11,19 @@ class Block:
     def __repr__(self):
         return f"Block <{self.color}>"
 
+    def __eq__(self, other):
+        if self.color == other.color:
+            return True
+        return False
+
     def draw(self, surface):
-        pygame.draw.rect(surface, self.color, (self.x, self.y, TILE_SIZE, TILE_SIZE))
+        px, py = self.px_pos
+        pygame.draw.rect(surface, self.color, (px, py, TILE_SIZE, TILE_SIZE))
+
+    @property
+    def pos(self):
+        return self.x, self.y
+
+    @property
+    def px_pos(self):
+        return self.x * TILE_SIZE, self.y * TILE_SIZE
