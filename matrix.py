@@ -13,10 +13,10 @@ class Matrix:
         return f"Matrix <({self.width}, {self.height})>"
 
     def randomize(self):
-        for x in range(self.width):
-            for y in range(self.height):
+        for i in range(self.height):
+            for j in range(self.width):
                 color = random.choice(GAME_COLORS)
-                block = Block(x, y, color)
+                block = Block(j, i, color)
                 self.blocks.append(block)
 
     def get_block_by_position(self, x, y):
