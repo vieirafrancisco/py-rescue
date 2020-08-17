@@ -11,8 +11,12 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 # matrix
 grid = True
-matrix = Matrix(T_WIDTH, T_HEIGHT)
+matrix = Matrix(COLUMNS, ROWS)
 matrix.randomize()
+
+# groups
+blocks_group = pygame.sprite.Group()
+blocks_group.add(tuple(matrix.blocks))
 
 # graph
 graph = Graph()
@@ -25,13 +29,14 @@ for block in matrix.blocks:
 for block in matrix.blocks:
     x, y = block.pos
     directions = filter(
-        lambda pos: 0 <= pos[0] < T_WIDTH and 0 <= pos[1] < T_HEIGHT,
+        lambda pos: 0 <= pos[0] < COLUMNS and 0 <= pos[1] < ROWS,
         [(x + 1, y), (x, y + 1), (x - 1, y), (x, y - 1)]
     )
     for ax, ay in directions:
         adjacent_block = matrix.get_block_by_position(ax, ay)
-        if adjacent_block == block:
+        if adjacent_block.color == block.color:
             graph.create_edge(block.pos, adjacent_block.pos)
+print(graph.graph)
 
 def draw_grid():
     if grid:
@@ -42,8 +47,7 @@ def draw_grid():
 
 def render():
     # draw random square colors
-    for block in matrix.blocks:
-        block.draw(screen)
+    blocks_group.draw(screen)
     # grid
     draw_grid()
     
