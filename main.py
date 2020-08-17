@@ -36,7 +36,6 @@ for block in matrix.blocks:
         adjacent_block = matrix.get_block_by_position(ax, ay)
         if adjacent_block.color == block.color:
             graph.create_edge(block.pos, adjacent_block.pos)
-print(graph.graph)
 
 def draw_grid():
     if grid:
