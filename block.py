@@ -2,23 +2,18 @@ import pygame
 
 from settings import *
 
-class Block:
+class Block(pygame.sprite.Sprite):
     def __init__(self, x, y, color):
+        super().__init__()
+        self.image = pygame.Surface((TILE_SIZE, TILE_SIZE))
+        self.image.fill(color)
+        self.rect = self.image.get_rect(topleft = (x * TILE_SIZE, y * TILE_SIZE))
         self.x = x
         self.y = y
         self.color = color
 
     def __repr__(self):
         return f"Block <{self.color}>"
-
-    def __eq__(self, other):
-        if self.color == other.color:
-            return True
-        return False
-
-    def draw(self, surface):
-        px, py = self.px_pos
-        pygame.draw.rect(surface, self.color, (px, py, TILE_SIZE, TILE_SIZE))
 
     @property
     def pos(self):
