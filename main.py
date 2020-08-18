@@ -58,9 +58,14 @@ def update():
         mx = mouse_pos[0] // TILE_SIZE
         my = mouse_pos[1] // TILE_SIZE
         graph.dfs((mx, my))
-        for x, y in graph.group:
-            block = matrix.get_block_by_position(x, y)
-            block.kill()
+        if len(graph.group) > 1: # somente remover grupos com 2 ou mais blocos
+            for x, y in graph.group:
+                block = matrix.get_block_by_position(x, y)
+                block.kill()
+        # realocar os blocos:
+        # para cada bloco que foi removido verificar o primeiro block acima dele
+        # e colocar esse block nessa posição
+        # quando todos os blocos forem movidos randomizar os blocos que sobraram
 
 running = True
 clock = pygame.time.Clock()
