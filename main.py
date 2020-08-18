@@ -52,7 +52,15 @@ def render():
     
 
 def update():
-    ...
+    mouse_click = pygame.mouse.get_pressed()
+    if mouse_click[0]:
+        mouse_pos = pygame.mouse.get_pos()
+        mx = mouse_pos[0] // TILE_SIZE
+        my = mouse_pos[1] // TILE_SIZE
+        graph.dfs((mx, my))
+        for x, y in graph.group:
+            block = matrix.get_block_by_position(x, y)
+            block.kill()
 
 running = True
 clock = pygame.time.Clock()
