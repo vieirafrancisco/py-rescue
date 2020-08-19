@@ -1,14 +1,44 @@
+from settings import *
+
 def memset(keys, value=False):
     intr = {}
     for key in keys:
         intr[key] = value
     return intr
 
+class GraphControl:
+    def __init__(self):
+        self.graph = None
+
+    def update(self, block_group):
+        self.graph = Graph()
+        # add nodes
+        for block in block_group.matrix:
+            self.graph.add_node(block.pos)
+        # create edges
+        for block in block_group.matrix:
+            x, y = block.pos
+            directions = filter(
+                lambda pos: 0 <= pos[0] < COLUMNS and 0 <= pos[1] < ROWS,
+                    [(x + 1, y), (x, y + 1), (x - 1, y), (x, y - 1)]
+            ) 
+            for ax, ay in directions:
+                adjacent_block = block_group.get_block_by_position(ax, ay)
+                if adjacent_block.color == block.color:
+                    self.graph.create_edge(block.pos, adjacent_block.pos)
+
+    def event_update(self, mx, my):
+        result = []
+        group = self.graph.dfs((mx, my))
+        if len(group) > 1:
+            for x, y in group:
+                result.append((x, y))
+        return result
+
 class Graph:
     def __init__(self):
         self.graph = {}
         self.visited = {}
-        self.group = []
 
     @property
     def is_empty(self):
@@ -23,23 +53,19 @@ class Graph:
         else:
             return False
 
+    def create_edge(self, n1, n2):
+        self.add_nodes([n1, n2])
+        if n1 not in self.graph[n2]:
+            self.graph[n1].append(n2)
+            self.graph[n2].append(n1)
+
+    def add_nodes(self, node_list):
+        for node in node_list:
+            self.add_node(node)
+
     def add_node(self, node):
-        self.graph[node] = []
-
-    def remove_node(self, node):
-        ...
-
-    def create_edge(self, node1, node2):
-        if not self.has_node(node1):
-            self.graph[node1] = []
-        if not self.has_node(node2):
-            self.graph[node2] = []
-        if node1 not in self.graph[node2]:
-            self.graph[node1].append(node2)
-            self.graph[node2].append(node1)
-
-    def remove_edge(self, node1, node2):
-        ...
+        if not self.has_node(node):
+            self.graph[node] = []
 
     def get_adjacent(self, node):
         if self.has_node(node):
@@ -50,12 +76,13 @@ class Graph:
         if self.is_empty:
             raise Exception("Graph not has nodes!")
         self.visited = memset(self.graph.keys())
-        self.group = []
-        self.dfs_util(v)
+        stack = []
+        return self.dfs_util(v, stack)
 
-    def dfs_util(self, v):
+    def dfs_util(self, v, stack):
         self.visited[v] = True
-        self.group.append(v)
+        stack.append(v)
         for u in self.graph[v]:
             if not self.visited[u]:
-                self.dfs_util(u)
+                self.dfs_util(u, stack)
+        return stack
