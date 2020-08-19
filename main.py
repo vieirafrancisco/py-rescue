@@ -3,39 +3,22 @@ import random
 import pygame
 
 from settings import *
-from matrix import Matrix
-from graph import Graph
+from groups import BlockGroup
+from graph import GraphControl
 
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
-# matrix
-grid = True
-matrix = Matrix(COLUMNS, ROWS)
-matrix.randomize()
+# variables
+grid = False
 
-# groups
-blocks_group = pygame.sprite.Group()
-blocks_group.add(tuple(matrix.blocks))
+# block_group
+block_group = BlockGroup(COLUMNS, ROWS)
+block_group.randomize()
 
 # graph
-graph = Graph()
-
-## add nodes
-for block in matrix.blocks:
-    graph.add_node(block.pos)
-
-## create edges
-for block in matrix.blocks:
-    x, y = block.pos
-    directions = filter(
-        lambda pos: 0 <= pos[0] < COLUMNS and 0 <= pos[1] < ROWS,
-        [(x + 1, y), (x, y + 1), (x - 1, y), (x, y - 1)]
-    )
-    for ax, ay in directions:
-        adjacent_block = matrix.get_block_by_position(ax, ay)
-        if adjacent_block.color == block.color:
-            graph.create_edge(block.pos, adjacent_block.pos)
+gc = GraphControl()
+gc.update(block_group)
 
 def draw_grid():
     if grid:
@@ -46,9 +29,11 @@ def draw_grid():
 
 def render():
     # draw random square colors
-    blocks_group.draw(screen)
+    block_group.draw(screen)
     # grid
     draw_grid()
+    # show fps
+    pygame.display.set_caption(f"FPS: {round(clock.get_fps(), 2)}")
     
 
 def update():
@@ -57,15 +42,11 @@ def update():
         mouse_pos = pygame.mouse.get_pos()
         mx = mouse_pos[0] // TILE_SIZE
         my = mouse_pos[1] // TILE_SIZE
-        graph.dfs((mx, my))
-        if len(graph.group) > 1: # somente remover grupos com 2 ou mais blocos
-            for x, y in graph.group:
-                block = matrix.get_block_by_position(x, y)
-                block.kill()
-        # realocar os blocos:
-        # para cada bloco que foi removido verificar o primeiro block acima dele
-        # e colocar esse block nessa posição
-        # quando todos os blocos forem movidos randomizar os blocos que sobraram
+        positions = gc.event_update(mx, my)
+        if positions:
+            block_group.remove_blocks_by_position_list(positions)
+            gc.update(block_group)
+    block_group.update()
 
 running = True
 clock = pygame.time.Clock()
