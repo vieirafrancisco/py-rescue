@@ -1,8 +1,6 @@
-import random
-
 import pygame
 
-from settings import *
+from settings import WIDTH, HEIGHT, COLUMNS, ROWS, TILE_SIZE, GRAY, BLACK, FPS
 from groups import BlockGroup
 from graph import GraphControl
 
@@ -20,12 +18,14 @@ block_group.randomize()
 gc = GraphControl()
 gc.update(block_group)
 
+
 def draw_grid():
     if grid:
         for x in range(0, WIDTH, TILE_SIZE):
             pygame.draw.line(screen, GRAY, (x, 0), (x, HEIGHT))
         for y in range(0, HEIGHT, TILE_SIZE):
             pygame.draw.line(screen, GRAY, (0, y), (WIDTH, y))
+
 
 def render():
     # draw random square colors
@@ -34,7 +34,7 @@ def render():
     draw_grid()
     # show fps
     pygame.display.set_caption(f"FPS: {round(clock.get_fps(), 2)}")
-    
+
 
 def update():
     mouse_click = pygame.mouse.get_pressed()
@@ -47,6 +47,7 @@ def update():
             block_group.remove_blocks_by_position_list(positions)
             gc.update(block_group)
     block_group.update()
+
 
 running = True
 clock = pygame.time.Clock()

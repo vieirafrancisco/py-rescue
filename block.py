@@ -1,6 +1,7 @@
 import pygame
 
-from settings import *
+from settings import TILE_SIZE, HEIGHT
+
 
 class Block(pygame.sprite.Sprite):
     def __init__(self, group, x, y, color):
@@ -8,7 +9,7 @@ class Block(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self, group)
         self.image = pygame.Surface((TILE_SIZE, TILE_SIZE))
         self.image.fill(color)
-        self.rect = self.image.get_rect(topleft = (x * TILE_SIZE, y * TILE_SIZE))
+        self.rect = self.image.get_rect(topleft=(x * TILE_SIZE, y * TILE_SIZE))
         self.gravity = -2
         self.x = x
         self.y = y

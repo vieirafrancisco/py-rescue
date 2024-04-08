@@ -1,16 +1,16 @@
-## window
+# window
 WIDTH, HEIGHT = 640, 480
 FPS = 60
 
-## colors
-WHITE = (255,255,255)
-BLACK = (0,0,0)
+# colors
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
 GRAY = (75, 75, 75)
-RED = (255,0,0)
+RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
-## game
+# game
 TILE_SIZE = 32
 COLUMNS = WIDTH // TILE_SIZE
 ROWS = HEIGHT // TILE_SIZE

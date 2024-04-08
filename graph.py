@@ -1,10 +1,12 @@
-from settings import *
+from settings import COLUMNS, ROWS
+
 
 def memset(keys, value=False):
     intr = {}
     for key in keys:
         intr[key] = value
     return intr
+
 
 class GraphControl:
     def __init__(self):
@@ -20,8 +22,8 @@ class GraphControl:
             x, y = block.pos
             directions = filter(
                 lambda pos: 0 <= pos[0] < COLUMNS and 0 <= pos[1] < ROWS,
-                    [(x + 1, y), (x, y + 1), (x - 1, y), (x, y - 1)]
-            ) 
+                [(x + 1, y), (x, y + 1), (x - 1, y), (x, y - 1)],
+            )
             for ax, ay in directions:
                 adjacent_block = block_group.get_block_by_position(ax, ay)
                 if adjacent_block.color == block.color:
@@ -34,6 +36,7 @@ class GraphControl:
             for x, y in group:
                 result.append((x, y))
         return result
+
 
 class Graph:
     def __init__(self):

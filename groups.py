@@ -2,8 +2,9 @@ import random
 
 import pygame
 
-from settings import *
+from settings import GAME_COLORS
 from block import Block
+
 
 class BlockGroup(pygame.sprite.Group):
     def __init__(self, width, height):
@@ -28,7 +29,7 @@ class BlockGroup(pygame.sprite.Group):
     def remove_block_for_position(self, x, y):
         block = self.get_block_by_position(x, y)
         block.kill()
-        #self.matrix[x + y * self.width] = None
+        # self.matrix[x + y * self.width] = None
 
     def remove_blocks_by_position_list(self, position_list):
         for x, y in position_list:
@@ -38,7 +39,9 @@ class BlockGroup(pygame.sprite.Group):
         if self.matrix[x + y * self.width] is None:
             self.matrix[x + y * self.width] = block
         else:
-            raise Exception(f"Already has a block in this position: ({x}, {y})")
+            raise Exception(
+                f"Already has a block in this position: ({x}, {y})"
+            )
 
     def has_block(self, x, y):
         if self.matrix[x + y * self.width] is None:
